@@ -1,10 +1,11 @@
-from datetime import datetime
 import time
 from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
-import redis
+from BestJob.utils import rds
 
 # 全局黑名单
+
+
 BLACK_MEMBER = {}
 
 class IpCountMiddleware(MiddlewareMixin):
@@ -13,10 +14,7 @@ class IpCountMiddleware(MiddlewareMixin):
     '''
     def __init__(self, get_response):
         super(IpCountMiddleware, self).__init__(get_response)
-        self.db = redis.Redis(host='127.0.0.1',
-                              port=6379,
-                              db=1,
-                              decode_responses=True)
+        self.db = rds
 
     def process_request(self,request):
         user_ip = request.META.get('REMOTE_ADDR')
@@ -32,7 +30,7 @@ class IpCountMiddleware(MiddlewareMixin):
         if fw_count >=5:
             fw_times = self.db.lrange(user_ip,0,-1)  # 返回当前ip登录的所有时间点
             # 判断第五次请求和第一次请求的时间间隔是否大于1s
-            if fw_times[4]-fw_times[0] < 1:
+            if float(fw_times[4])-float(fw_times[0]) < 1:
                 # 属于非正常请求，加入黑名单
                 self.add_black(user_ip)
             # 清楚记录

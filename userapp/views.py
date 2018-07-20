@@ -14,6 +14,7 @@ def login(request):
         # 判断目前是否已经有用户
         print('%%%%%%%%%%%%%%%%%',request.COOKIES.get('login_user'))
         if request.COOKIES.get('login_user'):
+            request.session['login_user'] = request.COOKIES.get('login_user')
             return redirect('/home/')
         return render(request, 'login.html')
 

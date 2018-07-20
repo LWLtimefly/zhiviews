@@ -86,7 +86,7 @@
     <h1 style="color: #333;font-size: 50px;">找工作,超简单</h1>
 
     <div class="form">
-        <form action="/home/charts/" method="get" id="sform">
+        <form action="/home/search/" method="get" id="sform">
             <input id="city-name" value="全国" name="cityKw" type="hidden">
             <input placeholder="输入职位名称" list="zhiwei" value="" id="schbar-form-keyword" name="jobKw" type="text" style="height: 50px;width: 76%;margin-right: 1px;font-size: 25px;border: none;">
             <datalist id = "zhiwei">
@@ -103,10 +103,9 @@
 
         <select name = "location" onchange="selectCity(this)">
             <option value = "西安" selected>全国</option>
-            <option value = "成都">成都</option>
-    	    <option value = "北京">北京</option>
-    	    <option value = "深圳">深圳</option>
-    	    <option value = "西安">西安</option>
+            {% for city in citys %}
+                <option value = "{{ city }}">{{ city }}</option>
+            {% endfor %}
         </select>
         请选择城市
     </div>
@@ -117,7 +116,7 @@
         <p>
             注册登录遇到问题？请拨打 4000-168-168<em>|</em><a style="cursor: pointer" target="_blank" onclick="alert('请联系左方电话')">我要提意见</a></p>
         <p>
-            CopyRight &copy; 2000-2017 LWL,All Rights Reserved. 版权所有 千峰教育科技有限公司</p>
+            CopyRight &copy; 2000-2017 LWL,All Rights Reserved. 版权所有 娟娟科技</p>
         <p>
             电信业务审批[2006]字第92号；经营许可证编号： <a target="_blank" href="">
                 京ICP证060175号</a>；公安备案号码：京公网安备 110108901166号；</p>
