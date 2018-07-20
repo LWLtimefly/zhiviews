@@ -1,10 +1,11 @@
-from datetime import datetime
 import time
 from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
-import redis
+from BestJob.utils import rds
 
 # 全局黑名单
+
+
 BLACK_MEMBER = {}
 
 class IpCountMiddleware(MiddlewareMixin):
@@ -13,10 +14,7 @@ class IpCountMiddleware(MiddlewareMixin):
     '''
     def __init__(self, get_response):
         super(IpCountMiddleware, self).__init__(get_response)
-        self.db = redis.Redis(host='127.0.0.1',
-                              port=6379,
-                              db=1,
-                              decode_responses=True)
+        self.db = rds
 
     def process_request(self,request):
         user_ip = request.META.get('REMOTE_ADDR')

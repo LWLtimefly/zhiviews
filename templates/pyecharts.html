@@ -9,14 +9,38 @@
         <script src="{{ host }}/{{ jsfile_name }}.js"></script>
     {% endfor %}
 
-
+     <style>
+         div{
+             border: 1px solid salmon;
+         }
+     </style>
 
 </head>
 
 <body>
+<div style="width: 100px;height: 2500px">
 
-<div style="width: 100px;height: 300px">
+<div>
+            {{ time|safe }}
+</div>
+
+<div>
     {{ myechart|safe }}
+</div>
+
+<div>
+        {{ line|safe }}
+</div>
+
+    <div>
+            {{ edu|safe }}
+</div>
+
+
+<div>
+            {{ ciyun|safe }}
+</div>
+
 </div>
 
 </body>

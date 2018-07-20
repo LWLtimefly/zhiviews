@@ -7,4 +7,5 @@ urlpatterns = [
     path('changecity/',views.changecity),
     path('search/',views.search),
     path('charts/', views_chars.index),
+    path('xiangxi/<int:id>', views.xiangxi)
 ]

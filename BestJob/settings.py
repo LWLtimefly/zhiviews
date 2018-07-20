@@ -14,6 +14,9 @@ import os
 import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+#from celery.schedules import crontab, timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.join(BASE_DIR, 'myapps'))
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     # 'DjangoUeditor',
     'userapp',
     'searchapp',
+    'djcelery',  # django-celery的应用app
 ]
 
 MIDDLEWARE = [
@@ -132,4 +136,33 @@ STATICFILES_DIRS = [
     (os.path.join(BASE_DIR, 'static')),
 ]
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
+
+"""
+#--------------------------start celery config--------------------------
+import djcelery
+djcelery.setup_loader()  # 装载celery服务,
+BROKER_URL = 'redis://127.0.0.1:6379/10'  # 配置消息中间件位置
+
+CELERY_TIMEZONE = 'Asia/Shanghai'  # 时区
+
+# 配置计划任务存储的位置
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+# 配置定时任务
+SELERY_IMPORTS = ('searchapp.tasks',)  # 导入任务
+CELERYBEAT_SCHEDULE = {
+    u'ReadTask':{
+        'task': 'searchapp.tasks.searchJob',
+        'schedule': crontab(minute='*/2'),  # 每两分钟执行一次
+        'args': (1,8),
+    },
+    u'BuyTask':{
+        'task': 'searchapp.tasks.buyArt',
+        'schedule': timedelta(seconds=5),  # 每5秒钟执行一次
+        'args': (1,5),
+    },
+}
+
+#--------------------------end celery config----------------------------"""
+
