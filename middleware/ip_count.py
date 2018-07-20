@@ -32,7 +32,7 @@ class IpCountMiddleware(MiddlewareMixin):
         if fw_count >=5:
             fw_times = self.db.lrange(user_ip,0,-1)  # 返回当前ip登录的所有时间点
             # 判断第五次请求和第一次请求的时间间隔是否大于1s
-            if fw_times[4]-fw_times[0] < 1:
+            if float(fw_times[4])-float(fw_times[0]) < 1:
                 # 属于非正常请求，加入黑名单
                 self.add_black(user_ip)
             # 清楚记录
