@@ -110,7 +110,7 @@
                     <td>{{ zw.job_name }}</td>
                     <td>{{ zw.job_money }}</td>
                     <td>{{ zw.job_jy }}</td>
-                    <td>{{ zw.job_address }}</td>
+                    <td>{{ zw.job_address.cityname }}</td>
                     <td>{{ zw.job_time }}</td>
                     <td><a href="/home/xiangxi/{{ zw.id }}">{{ zw.job_comname }}</a></td>
                 </tr>
@@ -120,7 +120,7 @@
 </div>
 
 <div style="position:fixed; right: 20px; top: 100px; width: 20%;border: 1px solid gray;">
-<h1 class="text-center" style="font-size: larger" >公司热度排行</h1>
+<h1 class="text-center" style="font-size: 30px" >公司热度排行</h1>
     <ul>
         {% for company,score in topCompany %}
             <li style="margin: 5px;padding-top: 5px">

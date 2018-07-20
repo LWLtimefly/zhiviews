@@ -5,13 +5,13 @@ from django.shortcuts import render
 from BestJob.utils import rds
 from searchapp import views_chars
 from userapp.models import User
-from searchapp.models import JobMsg
+from searchapp.models import JobMsg, JobCitys
 
 def home(request):
     # 主页接口
     # 获取所有城市
-    citys = [city[0] for city in JobMsg.objects.all().values_list('job_address')]
-    citys = tuple(set(citys))
+    citys = [city[0] for city in JobCitys.objects.all().values_list('cityname')]
+    citys = tuple(citys)
     # 获取登录用户token
     tok = request.session.get('login_user')
     data = {}
@@ -31,11 +31,15 @@ def changecity(request):
 
 def search(request):
     city = request.GET.get('cityKw','')
+    if city != '全国':
+        city_id = JobCitys.objects.get(cityname=city).cityid
+    else:
+        city_id = '全国'
     job = request.GET.get('jobKw','')
 
     # 获取所有城市
-    citys = [city[0] for city in JobMsg.objects.all().values_list('job_address')]
-    citys = tuple(set(citys))
+    citys = [city[0] for city in JobCitys.objects.all().values_list('cityname')]
+    citys = tuple(citys)
 
     # 获取登录用户token
     tok = request.session.get('login_user')
@@ -52,7 +56,7 @@ def search(request):
     # 公司热度排行
     topCompany = getCompanyTop(15)
 
-    content = views_chars.index(request,city)
+    content = views_chars.index(city_id)
     content['data'] = data
     content['zhiwei'] = zhiwei
     content['citys'] = citys
@@ -64,7 +68,8 @@ def zhiweitable(city,job):
     if city == '全国':
         zhiwei = JobMsg.objects.filter(job_name__icontains=job).all()
     else:
-        zhiwei = JobMsg.objects.filter(job_address= city,job_name__icontains=job).all()
+        zhiwei = JobCitys.objects.get(cityname=city).jobmsg_set.filter(job_name__icontains=job).all()
+        # zhiwei = JobMsg.objects.filter(job_address= city,job_name__icontains=job).all()
     return zhiwei
 
 

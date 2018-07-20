@@ -19,7 +19,7 @@ from pyecharts import Bar, Timeline
 from random import randint
 
 # 查询数据
-from searchapp.models import JobMsg
+from searchapp.models import JobMsg,JobCitys
 from pyecharts import Bar, Line, Timeline, Overlap
 
 '''如
@@ -131,17 +131,25 @@ def maps(city):
 from pyecharts import Geo
 def line3d():
     # --------------------地图---------------------------------
-    a = list(JobMsg.objects.all().values_list('job_address', ))
+    a = list(JobMsg.objects.all().values_list('job_address'))
     # print(a)
+    city_names=[]
+    for city_id in a:
+        try:
+            city_names.append(JobCitys.objects.get(cityid=city_id[0]).cityname)
+
+        except:
+            pass
     ss = {}
-    for i in a:
-        if a.count(i) >= 1:
-            ss[i] = a.count(i)
-    # print(ss)
+
+    for i in city_names:
+        if city_names.count(i) >= 1:
+            ss[i] = city_names.count(i)
+    print(ss)
     hh = []
     for i, j in ss.items():
-        if i[0] != '丽江':
-            hh.append((i[0], j))
+        if i not in ['丽江']:
+            hh.append((i, j))
     # print(hh)
 
     geo = Geo("城市与需求量关系图", title_color="#fff",
@@ -220,11 +228,11 @@ def line(city):
         a = list(JobMsg.objects.all().values_list('job_jy', 'job_meanmoney'))
     else:
         a = list(JobMsg.objects.filter(job_address=city).values_list('job_jy', 'job_meanmoney'))
-    # print(a)
+    print(a)
     exprice = []
     for i in a:
         exprice.append([i[0], int(i[1])])
-    # print(exprice)
+    print(exprice)
 
     exprice = DataFrame(exprice)
     sss = Series(exprice.groupby(0).mean()[1])
@@ -493,7 +501,7 @@ def time(city):
 REMOTE_HOST = "https://pyecharts.github.io/assets/js"
 
 
-def index(request,city):
+def index(city):
     # template = loader.get_template('myfirstvis/pyecharts.html')
     map = maps(city)
     l3d = line3d()
@@ -518,3 +526,19 @@ def index(request,city):
     # print(context)
     # return HttpResponse(template.render(context, request))
     return context
+
+
+# {'北京': 313, '广州': 184, '西安': 326, '南京': 25,
+# '成都': 177, '保定': 1, '苏州': 1419, '开封': 1, '邯郸': 1,
+#  '合肥': 7, '福州': 6, '厦门': 650, '武 1, '贵阳': 8,
+# '台州': 1, '临沂': 1, '大连': 13, '株洲': 1, '重庆': 12,
+# '烟台': 1, '上海': 449, '佛山': 5, '济南': 7, '扬州': 2,
+# '东莞': 6, '无锡': 3, 8, '中山': 4, '南充': 2, '杭州': 788,
+# '宁波': 8, '洛阳': 1, '南通': 2, '长春': 2, '南昌': 6,
+# '衢州': 1, '宝鸡': 1, '温州': 3, '昆明': 5, '泰州': 1, ',
+# '太原': 2, '唐山': 4, '湖州': 1, '张掖': 1, '珠海': 3,
+# '济宁': 1, '廊坊': 1, '菏泽': 1, '德阳': 1, '惠州': 1,
+#  '北海': 1, '枣庄': 1, '秦皇岛': 1, '酒': 2, '鄂州': 1,
+# '天津': 136, '盐城': 1, '九江': 1, '蚌埠': 1, '漳州': 2,
+#  '兰州': 1, '金华': 1, '六安': 1, '大庆': 1, '新余': 1,
+# '乌鲁木齐': 1, '郑州'14, '海口': 1, '信阳': 1, '深圳': 427}
