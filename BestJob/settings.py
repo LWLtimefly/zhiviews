@@ -138,6 +138,31 @@ STATICFILES_DIRS = [
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
 
+
+#设置缓存
+CACHES = {
+    'dbcache': {    #数据库配置，在终端中通过命令创建blob_cache_table包
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'blob_cache_table',
+    },
+    'filecache': {  #文件配置文件，会将文件缓存存在指定路径---/var/tmp/blob_cache'
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/blob_cache',
+    },
+    "default": {    #配置redis数据库
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # "PASSWORD": "109321:"
+        }
+    }
+}
+
+#设置session缓存，将session保存的数据，存入到cache缓存中，不放到数据库中
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 """
 #--------------------------start celery config--------------------------
 # import djcelery

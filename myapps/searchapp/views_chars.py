@@ -21,6 +21,7 @@ from random import randint
 # 查询数据
 from searchapp.models import JobMsg,JobCitys
 from pyecharts import Bar, Line, Timeline, Overlap
+from django.views.decorators.cache import cache_page
 
 '''如
 w = models.Simp.objects.all().values_list('username')
@@ -72,33 +73,33 @@ def maps(city):
     else:
         a = list(JobMsg.objects.filter(job_address=city).values_list('job_meanmoney', ))
     # print(a)
-    mm = []
+    mm = {'0-2000':0,'2000-4000':0,'4000-6000':0,'6000-8000':0,'8000-10000':0,'10000-15000':0,'15000-20000':0,'20000-30000':0,'30000以上':0}
     for i in a:
         if int(i[0]) < 2000:
-            mm.append('0-2000')
+            mm['0-2000']+=1
         elif int(i[0]) < 4000:
-            mm.append('2000-4000')
+            mm['2000-4000']+=1
         elif int(i[0]) < 6000:
-            mm.append('4000-6000')
+            mm['4000-6000']+=1
         elif int(i[0]) < 8000:
-            mm.append('6000-8000')
+            mm['6000-8000']+=1
         elif int(i[0]) < 10000:
-            mm.append('8000-10000')
+            mm['8000-10000']+=1
         elif int(i[0]) < 15000:
-            mm.append('10000-15000')
+            mm['10000-15000']+=1
         elif int(i[0]) < 20000:
-            mm.append('15000-20000')
+            mm['15000-20000']+=1
         elif int(i[0]) < 30000:
-            mm.append('20000-30000')
+            mm['20000-30000']+=1
         else:
-            mm.append('30000以上')
+            mm['30000以上']+=1
 
-    ss = {}
-    for i in mm:
-        if mm.count(i) >= 1:
-            ss[i] = mm.count(i)
-    key = list(ss.keys())
-    value = list(ss.values())
+    # ss = {}
+    # for i in mm:
+    #     if mm.count(i) >= 1:
+    #         ss[i] = mm.count(i)
+    key = list(mm.keys())
+    value = list(mm.values())
     pie = Pie(title="薪资所占比例图", title_pos='left', width=1000, height=350, title_text_size=18)
     # pie.add(
     #     "",
@@ -129,6 +130,8 @@ def maps(city):
     # page.add(pie)
 
 from pyecharts import Geo
+
+#@cache_page(60)
 def line3d():
     # --------------------地图---------------------------------
     a = list(JobMsg.objects.all().values_list('job_address'))
@@ -501,7 +504,7 @@ def time(city):
 REMOTE_HOST = "https://pyecharts.github.io/assets/js"
 
 
-def index(city):
+def index(request,city):
     # template = loader.get_template('myfirstvis/pyecharts.html')
     map = maps(city)
     l3d = line3d()

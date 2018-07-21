@@ -6,6 +6,8 @@ from BestJob.utils import rds
 from searchapp import views_chars
 from userapp.models import User
 from searchapp.models import JobMsg, JobCitys
+from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 
 def home(request):
     # 主页接口
@@ -28,8 +30,9 @@ def changecity(request):
     # 切换城市
     return None
 
-
+@cache_page(60)
 def search(request):
+    print('##$%^&^%$#$%^&^%$#$%^&^%$#$%^&^%$#@#$%^&*()(#@#$%^&*&^%$')
     city = request.GET.get('cityKw','')
     if city != '全国':
         city_id = JobCitys.objects.get(cityname=city).cityid
@@ -56,7 +59,7 @@ def search(request):
     # 公司热度排行
     topCompany = getCompanyTop(15)
 
-    content = views_chars.index(city_id)
+    content = views_chars.index(request,city_id)
     content['data'] = data
     content['zhiwei'] = zhiwei
     content['citys'] = citys
@@ -85,10 +88,11 @@ def xiangxi(request, id):
 
 
 # 排行榜
+#@cache_page(10)
 def getCompanyTop(n):
     topn = rds.zrevrange('companyTop',0,n-1,withscores=True)
     print(topn)
     ids = [int(id) for id,score in topn]
     companys = JobMsg.objects.in_bulk(ids)
-    companys_top = [(companys.get(int(id)),score) for id,score in topn]
+    companys_top = [(companys.get(int(id)),int(score)) for id,score in topn]
     return companys_top

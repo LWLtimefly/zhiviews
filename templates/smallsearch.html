@@ -119,12 +119,13 @@
     </table>
 </div>
 
-<div style="position:fixed; right: 20px; top: 100px; width: 20%;border: 1px solid gray;">
-<h1 class="text-center" style="font-size: 30px" >公司热度排行</h1>
+<div style="position:fixed; right: 20px; top: 100px; width: 20%;border: 1px none gray;">
+<h1 class="text-center" style="font-size: 25px" >公司热度排行</h1><br/>
     <ul>
         {% for company,score in topCompany %}
             <li style="margin: 5px;padding-top: 5px">
-                <a href="/home/xiangxi/{{ company.id }}">{{ company.job_comname }}</a> -- {{ score }}
+                <a href="/home/xiangxi/{{ company.id }}">{{ company.job_comname }}</a><span style="color: red"> --- {{ score }}</span>
+                <hr style="border:solid #585858;" />
             </li>
         {% endfor %}
 
