@@ -63,15 +63,15 @@ from collections import Counter
 '''
 
 
-def maps(city):
+def maps(city,job):
     # # ---------------------------------------薪资频数分布图-----------------------------------
     # #
     # #
     # # 饼图  薪资频数分布图
-    if city == '全国':
+    if city == '全国' or job=='':
         a = list(JobMsg.objects.all().values_list('job_meanmoney', ))
     else:
-        a = list(JobMsg.objects.filter(job_address=city).values_list('job_meanmoney', ))
+        a = list(JobMsg.objects.filter(job_name__icontains=job).values_list('job_meanmoney', ))
     # print(a)
     mm = {'0-2000':0,'2000-4000':0,'4000-6000':0,'6000-8000':0,'8000-10000':0,'10000-15000':0,'15000-20000':0,'20000-30000':0,'30000以上':0}
     for i in a:
@@ -148,7 +148,7 @@ def line3d():
     for i in city_names:
         if city_names.count(i) >= 1:
             ss[i] = city_names.count(i)
-    print(ss)
+    # print(ss)
     hh = []
     for i, j in ss.items():
         if i not in ['丽江']:
@@ -226,24 +226,27 @@ def line3d():
     # # -----------------------------工作经验的平均薪资的关系图----------------------------
 
 
-def line(city):
-    if city == '全国':
+def line(city,job):
+    if city == '全国' or job=='':
         a = list(JobMsg.objects.all().values_list('job_jy', 'job_meanmoney'))
     else:
-        a = list(JobMsg.objects.filter(job_address=city).values_list('job_jy', 'job_meanmoney'))
-    print(a)
+        a = list(JobMsg.objects.filter(job_name__icontains=job).values_list('job_jy', 'job_meanmoney'))
+    # print(a)
     exprice = []
     for i in a:
         exprice.append([i[0], int(i[1])])
-    print(exprice)
+    # print(exprice)
 
     exprice = DataFrame(exprice)
-    sss = Series(exprice.groupby(0).mean()[1])
-    # print(sss)
-    index1 = list(sss.index)
-    # print(index1)
-    value1 = list(sss.values)
-    # print(value1)
+    try:
+        sss = Series(exprice.groupby(0).mean()[1])
+        # print(sss)
+        index1 = list(sss.index)
+        # print(index1)
+        value1 = list(sss.values)
+        # print(value1)
+    except:
+        index1 = value1 = []
     b = list(zip(index1, value1))
     a = [['1经验不限', 0], ['2应届生', 0], ['31年以内', 0], ['41-3年', 0], ['53-5年', 0], ['65-10年', 0], ['710年以上', 0]]
     for i in b:
@@ -270,28 +273,29 @@ def line(city):
     # --------------------------------学历与平均薪资的箱线图--------------------------------
 
 
-def edu(city):
-    if city == '全国':
+def edu(city,job):
+    if city == '全国' or job=='':
         e = list(JobMsg.objects.all().values_list('job_xl', 'job_meanmoney'))
     else:
-        e = list(JobMsg.objects.filter(job_address=city).values_list('job_xl', 'job_meanmoney'))
+        e = list(JobMsg.objects.filter(job_name__icontains=job).values_list('job_xl', 'job_meanmoney'))
     # print(e)
     ee = []
     for i in e:
         ee.append([i[0], int(i[1])])
     # print(ee)
+    try:
+        edu = DataFrame(ee)
+        edulist = {}
+        for i in edu[0]:
+            edulist[i] = list(edu.loc[edu[0] == i][1])
 
-    edu = DataFrame(ee)
-    edulist = {}
-    for i in edu[0]:
-        edulist[i] = list(edu.loc[edu[0] == i][1])
-
-    k = []
-    v = []
-    for key, value in edulist.items():
-        k.append(key)
-        v.append(value)
-
+        k = []
+        v = []
+        for key, value in edulist.items():
+            k.append(key)
+            v.append(value)
+    except:
+        k = v = []
     # print(k)
     # print('----',v)
     boxplot = Boxplot("学历与薪资水平箱线图", background_color='#', width=1000, height=350, title_text_size=18)
@@ -347,11 +351,11 @@ def edu(city):
 
 
 # ------------------------------------------------测试  时间轮播---------------------------------------------
-def time(city):
-    if city == '全国':
+def time(city,job):
+    if city == '全国' or job=='':
         lb = list(JobMsg.objects.all().values_list('job_xl', 'job_time'))
     else:
-        lb = list(JobMsg.objects.filter(job_address=city).values_list('job_xl', 'job_time'))
+        lb = list(JobMsg.objects.filter(job_name__icontains=job).values_list('job_xl', 'job_time'))
     # print(lb)
     a = []
     b = []
@@ -369,10 +373,12 @@ def time(city):
     # print(list(Series(t.loc[(t[1] == 3) & (t[2] < 8)][0]).values))
 
     bar_1 = Bar('三 月')
+
     bar_11_w = list(Series(t.loc[(t[1] == 3) & (t[2] < 8)][0]).values)
     bar_11_s = []
     for i in k:
         bar_11_s.append(bar_11_w.count(i))
+
     bar_1.add("week 1", k, bar_11_s)
 
     bar_12_w = list(Series(t.loc[(t[1] == 3) & (t[2] > 8) & (t[2] < 15)][0]).values)
@@ -504,14 +510,14 @@ def time(city):
 REMOTE_HOST = "https://pyecharts.github.io/assets/js"
 
 
-def index(request,city):
+def index(city,job):
     # template = loader.get_template('myfirstvis/pyecharts.html')
-    map = maps(city)
+    map = maps(city,job)
     l3d = line3d()
-    l = line(city)
-    e = edu(city)
+    l = line(city,job)
+    e = edu(city,job)
     # c = ciyun()
-    t = time(city)
+    t = time(city,job)
     context = dict(
         maps=map.render_embed(),
         myechart=l3d.render_embed(),
@@ -529,19 +535,3 @@ def index(request,city):
     # print(context)
     # return HttpResponse(template.render(context, request))
     return context
-
-
-# {'北京': 313, '广州': 184, '西安': 326, '南京': 25,
-# '成都': 177, '保定': 1, '苏州': 1419, '开封': 1, '邯郸': 1,
-#  '合肥': 7, '福州': 6, '厦门': 650, '武 1, '贵阳': 8,
-# '台州': 1, '临沂': 1, '大连': 13, '株洲': 1, '重庆': 12,
-# '烟台': 1, '上海': 449, '佛山': 5, '济南': 7, '扬州': 2,
-# '东莞': 6, '无锡': 3, 8, '中山': 4, '南充': 2, '杭州': 788,
-# '宁波': 8, '洛阳': 1, '南通': 2, '长春': 2, '南昌': 6,
-# '衢州': 1, '宝鸡': 1, '温州': 3, '昆明': 5, '泰州': 1, ',
-# '太原': 2, '唐山': 4, '湖州': 1, '张掖': 1, '珠海': 3,
-# '济宁': 1, '廊坊': 1, '菏泽': 1, '德阳': 1, '惠州': 1,
-#  '北海': 1, '枣庄': 1, '秦皇岛': 1, '酒': 2, '鄂州': 1,
-# '天津': 136, '盐城': 1, '九江': 1, '蚌埠': 1, '漳州': 2,
-#  '兰州': 1, '金华': 1, '六安': 1, '大庆': 1, '新余': 1,
-# '乌鲁木齐': 1, '郑州'14, '海口': 1, '信阳': 1, '深圳': 427}

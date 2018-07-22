@@ -19,6 +19,7 @@ class IpCountMiddleware(MiddlewareMixin):
     def process_request(self,request):
         user_ip = request.META.get('REMOTE_ADDR')
         # 判断user_ip 是否在黑名单中
+        print(BLACK_MEMBER)
         if user_ip in BLACK_MEMBER.keys():
             if time.time()-BLACK_MEMBER[user_ip] < 24*3600:
                 return HttpResponse('<p>您的请求过于频繁，请休息一下先</p>')

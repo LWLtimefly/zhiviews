@@ -12,7 +12,7 @@ def login(request):
     # 登录接口
     if request.method == 'GET':
         # 判断目前是否已经有用户
-        print('%%%%%%%%%%%%%%%%%',request.COOKIES.get('login_user'))
+        # print('%%%%%%%%%%%%%%%%%',request.COOKIES.get('login_user'))
         if request.COOKIES.get('login_user'):
             request.session['login_user']=request.COOKIES.get('login_user')
             return redirect('/home/')
@@ -33,14 +33,17 @@ def login(request):
     user = User.objects.filter(username=username,password=password).first()
     if user:
         resp = redirect('/home/')
-        # 生成token，并保存到cookie和session中
+        # 生成token，并保存到session中
         tok = token()
         request.session['login_user'] = tok
+
+        # 把token存入到用户表中
+        user.token = tok
+        user.save()
+
+        # 判断是否自助登录，记录在cookie中
         if request.POST.get('cbx_keepState') == '1':
             resp.set_cookie('login_user', tok)
-            # 把token存入到用户表中
-            user.token = tok
-            user.save()
             return resp
         return resp
     return render(request, 'login.html',
@@ -59,7 +62,7 @@ def regist(request):
     password2 = request.POST.get('password2','')
     verifycode = request.POST.get('txt_Code','')
 
-    # 验证验证码
+    # 验证验证码（Form验证）
     if not checkCode(request, verifycode):
         return render(request, 'regist.html',
             {'username':username,'password':password,'password2':password2,'code':verifycode,'errorcode':'验证码输入有误'})
@@ -74,14 +77,14 @@ def regist(request):
     if form.is_valid():
         # 保存数据到数据库
         form.save()
-        # 生成token，并保存到cookie和session中
-        tok = token()
-        request.session['login_user'] = tok
         # 判断是否含有自助登录
         if request.POST.get('cbx_keepState') == '1':
+            # 生成token，并保存到cookie和session中
+            tok = token()
             # 自助登录，返回主页
             resp = redirect('/home/')
             resp.set_cookie('login_user',tok)
+            request.session['login_user'] = tok
             # 把token存入到用户表中
             user = User.objects.get(username=username)
             user.token = tok
@@ -103,22 +106,23 @@ def verifycode(request):
 # 退出
 def logout(request):
     tok = request.session.get('login_user')
+    if tok:
+        try:
+            # print('进来了')
+            resp = redirect('/home/')
+            # 退出时，从客户端中删除token,服务端删除token
+            resp.delete_cookie('login_user')
+            # print('已删除')
+            # print('----@@@@@@@',request.COOKIES.get('login_user'))
+            request.session.clear()
+            user = User.objects.get(token=tok)
+            user.token = ''
+            user.save()
 
-    try:
-        print('进来了')
-        resp = redirect('/home/')
-        # 退出时，从客户端中删除token,服务端删除token
-        resp.delete_cookie('login_user')
-        print('已删除')
-        print('----@@@@@@@',request.COOKIES.get('login_user'))
-        request.session.clear()
-        user = User.objects.get(token=tok)
-        user.token = ''
-        user.save()
-
-        return resp
-    except:
-        return redirect('/home/')
+            return resp
+        except:
+            return redirect('/home/')
+    return HttpResponse('<p>暂无用户登录，无需退出</p>')
 
 
 def modify(request):

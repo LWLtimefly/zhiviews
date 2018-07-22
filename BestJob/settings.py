@@ -92,7 +92,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'POST': '3306',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'CHARSET': 'UTF8'
     }
 }
@@ -191,3 +191,44 @@ SESSION_CACHE_ALIAS = "default"
 
 #--------------------------end celery config----------------------------"""
 
+#-------------配置日志----------------
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+
+    # 日志格式对象
+    'formatters':{
+        'info':{
+            'format':'[<%(asctime)s>:%(funcName)s-%(lineno)s]>>%(message)s',
+            'datefmt':'%Y-%m-%d %H:%M:%S',
+        }
+    },
+
+    # 过滤器
+    'filters':{
+
+    },
+    # 处理器：格式器 Formatter
+    'handlers':{
+        'console':{
+            'level':'INFO',
+            'formatter':'info',
+            'class':'logging.StreamHandler'
+        },
+        'logFile':{
+            'level':'INFO',
+            'formatter':'info',
+            'class':'logging.handlers.TimedRotatingFileHandler',
+            'filename':'a.log',
+        }
+    },
+    # 日志对象， 处理器Handler,
+    'loggers':{
+        'mdjango':{
+            'handlers':['console','logFile'],
+            'level':'INFO',
+            'propagate':False,
+        }
+    },
+
+}

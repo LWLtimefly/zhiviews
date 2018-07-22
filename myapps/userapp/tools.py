@@ -59,7 +59,7 @@ def checkCode(request, verifycode):
     # 从session中取出验证码
     chars = request.session['verifycode']
     # 判断验证码是否一致
-    if verifycode == chars:
+    if verifycode.lower() == chars.lower():
         return True
     else:
         return False

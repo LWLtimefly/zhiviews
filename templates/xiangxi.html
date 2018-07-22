@@ -7,19 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/login_style.css' %}" media="all" />
-    {% for jsfile_name in script_list %}
-        <script src="{{ host }}/{{ jsfile_name }}.js"></script>
-    {% endfor %}
-
-     <style>
-         #charts div{
-             margin: 20px auto;
-             width: 75%;
-
-{#             border: 1px solid black;#}
-         }
-
-    </style>
 </head>
 <body>
 <!-- 导航条 -->
@@ -67,77 +54,27 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<!-- charts-->
-<div id="charts" style="width: 100px;margin-bottom: 50px">
 
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ time|safe }}</div>
-</div>
+<h1>{{ job.job_comname }}</h1>
+<div class="in">
 
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ myechart|safe }}</div>
-</div>
 
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ maps|safe }}</div>
-</div>
+    <p class="ltype">&nbsp;
+        {{ job.company_username }}&nbsp;&nbsp;|
+        &nbsp;&nbsp;{{ job.company_money }}&nbsp;&nbsp;|
+        &nbsp;&nbsp;{{ job.company_time }}&nbsp;&nbsp;|
+        &nbsp;&nbsp;{{ job.company_type }}&nbsp;&nbsp;|
+        &nbsp;&nbsp;{{ job.company_status }}
 
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ line|safe }}</div>
-</div>
-
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ edu|safe }}</div>
-</div>
+    </p>
 
 </div>
-
-<!-- 详细信息表 -->
-<div style="width: 75%;margin-bottom: 20px;text-align: center;margin-bottom: 20px">
-    <table class="table table-bordered">
-        <caption style="font-size: larger; text-align: center"><storng>相关职位信息</storng></caption>
-        <thead>
-            <td>职位名称</td>
-            <td>薪资范围</td>
-            <td>工资经验</td>
-            <td>工作地点</td>
-            <td>发布时间</td>
-            <td>公司名称</td>
-        </thead>
-        <tbody>
-        {% if not zhiwei %}
-            <tr><td colspan="6">暂无数据</td></tr>
-        {% else %}
-            {% for zw in zhiwei %}
-                <tr>
-                    <td>{{ zw.job_name }}</td>
-                    <td>{{ zw.job_money }}</td>
-                    <td>{{ zw.job_jy }}</td>
-                    <td>{{ zw.job_address.cityname }}</td>
-                    <td>{{ zw.job_time }}</td>
-                    <td><a href="/home/xiangxi/{{ zw.id }}">{{ zw.job_comname }}</a></td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-    </tbody>
-    </table>
-</div>
-
-<div style="position:fixed; right: 20px; top: 100px; width: 20%;border: 1px none gray;">
-<h1 class="text-center" style="font-size: 25px" >公司热度排行</h1><br/>
-    <ul>
-        {% for company,score in topCompany %}
-            <li style="margin: 5px;padding-top: 5px">
-                <a href="/home/xiangxi/{{ company.id }}">{{ company.job_comname }}</a><span style="color: red"> --- {{ score }}</span>
-                <hr style="border:solid #585858;" />
-            </li>
-        {% endfor %}
-
-    </ul>
+<div class="con_txt">
+    {{ job.job_gstext }}
 </div>
 
 <!--页脚开始-->
- <div class="foot_txt_box" style="position: relative;">
+ <div class="foot_txt_box" style="position: absolute;">
     <div class="foot_txt">
         <p>
             注册登录遇到问题？请拨打 4000-168-168<em>|</em><a style="cursor: pointer" target="_blank" onclick="alert('请联系左方电话')">我要提意见</a></p>
