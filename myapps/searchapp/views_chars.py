@@ -151,7 +151,7 @@ def line3d():
     # print(ss)
     hh = []
     for i, j in ss.items():
-        if i not in ['丽江']:
+        if i not in ['丽江','达州','黔西南']:
             hh.append((i, j))
     # print(hh)
 
@@ -510,28 +510,55 @@ def time(city,job):
 REMOTE_HOST = "https://pyecharts.github.io/assets/js"
 
 
-def index(city,job):
+def index(city,job,type):
     # template = loader.get_template('myfirstvis/pyecharts.html')
-    map = maps(city,job)
-    l3d = line3d()
-    l = line(city,job)
-    e = edu(city,job)
-    # c = ciyun()
-    t = time(city,job)
-    context = dict(
-        maps=map.render_embed(),
-        myechart=l3d.render_embed(),
-        host=REMOTE_HOST,
-        script_list=l3d.get_js_dependencies(),
-        line=l.render_embed(),
-        edu=e.render_embed(),
-        # ciyun=c.render_embed(),
-        time=t.render_embed(),
-        script_list1=map.get_js_dependencies(),
-        script_list2=l.get_js_dependencies(),
-        # script_list3=c.get_js_dependencies(),
 
-    )
+    if type=='maps':
+        map = maps(city,job)
+        context=dict(maps=map.render_embed(),
+                     script_list=map.get_js_dependencies(),
+                     host=REMOTE_HOST)
+        return context
+    elif type=='myechart':
+        l3d = line3d()
+        context=dict(myechart = l3d.render_embed(),
+                     script_list=l3d.get_js_dependencies(),
+                     host=REMOTE_HOST)
+        return context
+    elif type=='line':
+        l = line(city,job)
+        context=dict(line=l.render_embed(),
+                     script_list=l.get_js_dependencies(),
+                     host=REMOTE_HOST)
+        return context
+    elif type=='edu':
+        e = edu(city,job)
+        context=dict(edu=e.render_embed(),
+                     script_list=e.get_js_dependencies(),
+                     host=REMOTE_HOST)
+        return context
+    elif type=='time':
+        t = time(city, job)
+        context=dict(time=t.render_embed(),
+                     script_list=t.get_js_dependencies(),
+                     host=REMOTE_HOST)
+        return context
+    # c = ciyun()
+    #
+    # context = dict(
+    #     maps=map.render_embed(),
+    #     myechart=l3d.render_embed(),
+    #     host=REMOTE_HOST,
+    #     script_list=l3d.get_js_dependencies(),
+    #     line=l.render_embed(),
+    #     edu=e.render_embed(),
+    #     # ciyun=c.render_embed(),
+    #     time=t.render_embed(),
+    #     script_list1=map.get_js_dependencies(),
+    #     script_list2=l.get_js_dependencies(),
+    #     # script_list3=c.get_js_dependencies(),
+    #
+    # )
     # print(context)
     # return HttpResponse(template.render(context, request))
-    return context
+    #return context
