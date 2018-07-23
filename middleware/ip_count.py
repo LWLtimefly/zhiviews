@@ -21,17 +21,17 @@ class IpCountMiddleware(MiddlewareMixin):
         # 判断user_ip 是否在黑名单中
         print(BLACK_MEMBER)
         if user_ip in BLACK_MEMBER.keys():
-            if time.time()-BLACK_MEMBER[user_ip] < 24*3600:
+            if time.time()-BLACK_MEMBER[user_ip] < 3600:
                 return HttpResponse('<p>您的请求过于频繁，请休息一下先</p>')
             else:
                 BLACK_MEMBER.pop(user_ip)
         self.db.rpush(user_ip,time.time())
         # 获取同一个ip的登陆次数
         fw_count = self.db.llen(user_ip)
-        if fw_count >=5:
+        if fw_count >=10:
             fw_times = self.db.lrange(user_ip,0,-1)  # 返回当前ip登录的所有时间点
             # 判断第五次请求和第一次请求的时间间隔是否大于1s
-            if float(fw_times[4])-float(fw_times[0]) < 1:
+            if float(fw_times[9])-float(fw_times[0]) < 1:
                 # 属于非正常请求，加入黑名单
                 self.add_black(user_ip)
             # 清楚记录

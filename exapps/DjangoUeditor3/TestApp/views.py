@@ -20,7 +20,7 @@ def TestUEditorModel(request):
         form = UEditorTestModelForm(request.POST)
         if form.is_valid():
             form.save()
-            return render_to_response('test.html', {'form': form})
+            return render_to_response('xiangxi.html', {'form': form})
         else:
             return HttpResponse(u"数据校验错误")
     else:
@@ -31,7 +31,7 @@ def TestUEditorModel(request):
             form = UEditorTestModelForm(
                 initial={'Description': '测试'}
             )
-        return render_to_response('test.html', {'form': form})
+        return render_to_response('xiangxi.html', {'form': form})
 
 
 def ajaxcmd(request):

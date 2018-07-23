@@ -109,7 +109,7 @@ def xiangxi(request, id):
     if job:
         # 将被点击的公司写入到排行中
         rds.zincrby('companyTop',id, 1)
-        return render(request,'xiangxi.html',{'job':job,'data':data,'citys':citys})
+        return render(request, 'xiangxi.html', {'job':job, 'data':data, 'citys':citys})
 
     return HttpResponse('<p>很抱歉，此公司暂无详细信息！</p>')
 

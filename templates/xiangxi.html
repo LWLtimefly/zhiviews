@@ -1,14 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
     {% load static %}
-    <title>找工作，超简单</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
+    <title>Sticky Footer Navbar Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static 'css/login_style.css' %}" media="all" />
-</head>
+    <style>
+        .page-header {
+            padding-bottom: 0px;
+            margin: -10px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .ltype{
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+    </style>
+  </head>
+
 <body>
+
 <!-- 导航条 -->
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -30,51 +43,38 @@
         <li><a>&nbsp;&nbsp;</a></li>
         <li><a href="/user/login/">登录</a></li>
         <li><a>|</a></li>
-        <li><a href="/user/regist">注册</a></li>
+        <li><a href="/user/regist/">注册</a></li>
       </ul>
-      <form class="navbar-form navbar-left" action="/home/search/" method="get">
-        <div class="form-group">
-          <input type="text" name="jobKw" class="form-control" placeholder="Search">
-          <select name = "cityKw" onchange="selectCity(this)" style="height: 28px;">
-            <option value = "全国" selected>全国</option>
-            {% for city in citys %}
-                <option value="{{ city }}">{{ city }}</option>
-            {% endfor %}
-        </select>
-        </div>
-        <button type="submit" class="btn btn-default">Search</button>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
+    {% if data %}
+        <ul class="nav navbar-nav navbar-right">
         <li><img style="border: 1px solid gainsboro;border-radius: 50px;width: 30px;height: 30px;
                             margin-top: 7px;margin-left: 150px;"
                          src="/static/upload/{{ data.photo }}"></li>
         <li><a href="#">{{ data.username }}</a></li>
         <li role="presentation"><a href="/user/logout/">退出</a></li>
       </ul>
+    {% endif %}
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-<h1>{{ job.job_comname }}</h1>
-<div class="in">
-
-
-    <p class="ltype">&nbsp;
-        {{ job.company_username }}&nbsp;&nbsp;|
+    <!-- Begin page content -->
+    <div class="container">
+      <div class="page-header">
+            <h1 style="font-size: 35px">{{ job.job_comname }}</h1>
+      </div>
+      <p class="ltype">&nbsp;
         &nbsp;&nbsp;{{ job.company_money }}&nbsp;&nbsp;|
         &nbsp;&nbsp;{{ job.company_time }}&nbsp;&nbsp;|
         &nbsp;&nbsp;{{ job.company_type }}&nbsp;&nbsp;|
         &nbsp;&nbsp;{{ job.company_status }}
 
-    </p>
-
-</div>
-<div class="con_txt">
-    {{ job.job_gstext }}
-</div>
+      </p>
+      <p class="lead" style="line-height: 1.8;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ job.job_gstext }}</p>
+    </div>
 
 <!--页脚开始-->
- <div class="foot_txt_box" style="position: absolute;">
+ <div class="foot_txt_box">
     <div class="foot_txt">
         <p>
             注册登录遇到问题？请拨打 4000-168-168<em>|</em><a style="cursor: pointer" target="_blank" onclick="alert('请联系左方电话')">我要提意见</a></p>
@@ -85,13 +85,17 @@
                 京ICP证060175号</a>；公安备案号码：京公网安备 110108901166号；</p>
         <div class="foot_t_r">
             <a target="_blank" style="width: 100px;" class="jjwz" href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001041200160">
-                经营性网站备案信息</a>
-            <a target="_blank" style="width: 100px;" class="jftx" href="http://fzp.bjhd.gov.cn/">北京海淀警方提醒</a></div>
+                经营性网站备案信息
+            </a>
+            <a target="_blank" style="width: 100px;" class="jftx" href="http://fzp.bjhd.gov.cn/">北京海淀警方提醒</a>
+        </div>
     </div>
 </div>
 <!--页脚结束-->
 
-<script type="text/javascript" src="{% static 'js/jquery-1.8.1.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-</body>
+
+
+    <script type="text/javascript" src="{% static 'js/jquery-1.8.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  </body>
 </html>
