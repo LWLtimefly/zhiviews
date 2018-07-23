@@ -72,8 +72,8 @@ def search(request):
     topCompany = getCompanyTop(15)
 
     content = views_chars.index(city_id, job, 'time')
-    print('打印：',content)
-    print('类型:',type(content))
+    # print('打印：',content)
+    # print('类型:',type(content))
     content['data'] = data
     content['zhiwei'] = zhiwei
     content['citys'] = citys
@@ -82,7 +82,7 @@ def search(request):
     #print('选择的工作:', job)
     if not job:
         content['job'] = 'WU'
-        print('eeeeeeeeee',content['job'])
+        # print('eeeeeeeeee',content['job'])
     else:
         content['job'] = job
     return render(request, 'smallsearch.html', content)
@@ -102,8 +102,8 @@ def search_chart(request):
         chart = views_chars.index(city, '', title_type)
     else:
         chart = views_chars.index(city, job, title_type)
-    print(type(chart))
-    print('查询:',chart)
+    # print(type(chart))
+    # print('查询:',chart)
     return JsonResponse(chart)
 
 
