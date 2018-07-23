@@ -1,112 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
-    {% load static %}
+
     <title>找工作，超简单</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-theme.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login_style.css' %}" media="all" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login_style.css' %}" media="all"/>
     {% for jsfile_name in script_list %}
         <script src="{{ host }}/{{ jsfile_name }}.js"></script>
     {% endfor %}
 
-     <style>
-         #charts div{
-             margin: 20px auto;
-             width: 75%;
+    <style>
+        #charts div {
+            margin: 20px auto;
+            width: 75%;
 
-{#             border: 1px solid black;#}
-         }
+        {#             border: 1px solid black;#}
+        }
 
     </style>
 </head>
 <body>
 <!-- 导航条 -->
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">找工作</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/home/">主页 <span class="sr-only">(current)</span></a></li>
-        <li><a>&nbsp;&nbsp;</a></li>
-        <li><a href="/user/login/">登录</a></li>
-        <li><a>|</a></li>
-        <li><a href="/user/regist">注册</a></li>
-      </ul>
-      <form class="navbar-form navbar-left" action="/home/search/" method="get">
-        <div class="form-group">
-          <input type="text" name="jobKw" class="form-control" placeholder="Search">
-          <select name = "cityKw" onchange="selectCity(this)" style="height: 28px;">
-            <option value = "全国" selected>全国</option>
-            {% for city in citys %}
-                <option value="{{ city }}">{{ city }}</option>
-            {% endfor %}
-        </select>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">找工作</a>
         </div>
-        <button type="submit" class="btn btn-default">Search</button>
-      </form>
-      <ul class="nav navbar-nav navbar-right">
-        <li><img style="border: 1px solid gainsboro;border-radius: 50px;width: 30px;height: 30px;
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/home/">主页 <span class="sr-only">(current)</span></a></li>
+                <li><a>&nbsp;&nbsp;</a></li>
+                <li><a href="/user/login/">登录</a></li>
+                <li><a>|</a></li>
+                <li><a href="/user/regist/">注册</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="/home/search/" method="get">
+                <div class="form-group">
+                    <input type="text" name="jobKw" class="form-control" placeholder="Search">
+                    <select name="cityKw" onchange="selectCity(this)" style="height: 28px;">
+                        <option value="全国" selected>全国</option>
+                        {% for city in citys %}
+                            <option value="{{ city }}">{{ city }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><img style="border: 1px solid gainsboro;border-radius: 50px;width: 30px;height: 30px;
                             margin-top: 7px;margin-left: 150px;"
                          src="/static/upload/{{ data.photo }}"></li>
-        <li><a href="#">{{ data.username }}</a></li>
-        <li role="presentation"><a href="/user/logout/">退出</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+                <li><a href="#">{{ data.username }}</a></li>
+                <li role="presentation"><a href="/user/logout/">退出</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
 </nav>
 <!-- charts-->
-<div id="charts" style="width: 100px;margin-bottom: 50px">
 
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ time|safe }}</div>
+<div class="btn-group" role="group" aria-label="..." style="margin-left: 30px">
+    <button type="button" class="btn btn-primary" title="time">week-month</button>
+    <button type="button" class="btn btn-primary" title="maps">money-type</button>
+    <button type="button" class="btn btn-primary" title="line">money-expe</button>
+    <button type="button" class="btn btn-primary" title="edu">Box_chart</button>
+{#    <button type="button" class="btn btn-danger" title="myechart">Map</button>#}
 </div>
-
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ myechart|safe }}</div>
-</div>
-
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ maps|safe }}</div>
-</div>
-
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ line|safe }}</div>
-</div>
-
-<div class="row">
-  <div class="col-md-10 col-md-push-3">{{ edu|safe }}</div>
-</div>
-
-</div>
+<div id="charts" style="width: 800px;margin-bottom: 50px">{{ time|safe }}</div>
 
 <!-- 详细信息表 -->
 <div style="width: 75%;margin-bottom: 20px;text-align: center;margin-bottom: 20px">
     <table class="table table-bordered">
-        <caption style="font-size: larger; text-align: center"><storng>相关职位信息</storng></caption>
+        <caption style="font-size: larger; text-align: center">
+            <h3><em><storng>相关职位信息</storng></em></h3>
+        </caption>
         <thead>
-            <td>职位名称</td>
-            <td>薪资范围</td>
-            <td>工资经验</td>
-            <td>工作地点</td>
-            <td>发布时间</td>
-            <td>公司名称</td>
+        <td>职位名称</td>
+        <td>薪资范围</td>
+        <td>工资经验</td>
+        <td>工作地点</td>
+        <td>发布时间</td>
+        <td>公司名称</td>
         </thead>
         <tbody>
         {% if not zhiwei %}
-            <tr><td colspan="6">暂无数据</td></tr>
+            <tr>
+                <td colspan="6">暂无数据</td>
+            </tr>
         {% else %}
             {% for zw in zhiwei %}
                 <tr>
@@ -119,17 +111,18 @@
                 </tr>
             {% endfor %}
         {% endif %}
-    </tbody>
+        </tbody>
     </table>
 </div>
 
-<div style="position:fixed; right: 20px; top: 100px; width: 20%;border: 1px none gray;">
-<h1 class="text-center" style="font-size: 25px" >公司热度排行</h1><br/>
+<div style="position:fixed; right: 20px; top: 70px; width: 20%;border: 1px none gray;">
+    <h1 class="text-center" style="font-size: 25px">公司热度排行</h1><br/>
     <ul>
         {% for company,score in topCompany %}
             <li style="margin: 5px;padding-top: 5px">
-                <a href="/home/xiangxi/{{ company.id }}">{{ company.job_comname }}</a><span style="color: red"> --- {{ score }}</span>
-                <hr style="border:solid #585858;" />
+                <a href="/home/xiangxi/{{ company.id }}">{{ company.job_comname }}</a><span
+                    style="color: red"> --- {{ score }}</span>
+                <hr style="border:solid #585858;margin-top: 10px;margin-bottom: 10px;"/>
             </li>
         {% endfor %}
 
@@ -137,24 +130,49 @@
 </div>
 
 <!--页脚开始-->
- <div class="foot_txt_box" style="position: relative;">
+<div class="foot_txt_box" style="position: relative;">
     <div class="foot_txt">
         <p>
-            注册登录遇到问题？请拨打 4000-168-168<em>|</em><a style="cursor: pointer" target="_blank" onclick="alert('请联系左方电话')">我要提意见</a></p>
+            注册登录遇到问题？请拨打 4000-168-168<em>|</em><a style="cursor: pointer" target="_blank" onclick="alert('请联系左方电话')">我要提意见</a>
+        </p>
         <p>
             CopyRight &copy; 2000-2017 LWL,All Rights Reserved. 版权所有 娟娟科技</p>
         <p>
             电信业务审批[2006]字第92号；经营许可证编号： <a target="_blank" href="">
-                京ICP证060175号</a>；公安备案号码：京公网安备 110108901166号；</p>
+            京ICP证060175号</a>；公安备案号码：京公网安备 110108901166号；</p>
         <div class="foot_t_r">
-            <a target="_blank" style="width: 100px;" class="jjwz" href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001041200160">
+            <a target="_blank" style="width: 100px;" class="jjwz"
+               href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001041200160">
                 经营性网站备案信息</a>
             <a target="_blank" style="width: 100px;" class="jftx" href="http://fzp.bjhd.gov.cn/">北京海淀警方提醒</a></div>
     </div>
 </div>
 <!--页脚结束-->
 
+
+
 <script type="text/javascript" src="{% static 'js/jquery-1.8.1.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        $('.btn-primary').click(function () {
+            title_type = $(this).attr('title');
+            {#console.log('点击的按钮是:', title_type);#}
+            {#console.log('路径:','/home/search_chart/' + '?search_city_id=' + {{ search_city_id }} + '&job=' + {{ job }} +'jjjjj');#}
+            $.getJSON('/home/search_chart/' + '?search_city_id={{ search_city_id }}' + '&job={{ job }}' + '&title=' + title_type, function (data) {
+                console.log('类型：',typeof data);
+                console.log(data);
+                {#console.log('得到的图从:', data.get(title_type));#}
+                $('#charts').html(data[title_type])
+            })
+        });
+        {##}
+        {#$.getJSON('/home/search_chart/'+'?search_city_id={{ search_city_id }}' + '&job={{ job }}' + '&title=myechart',function (data) {#}
+        {#    $('.btn-danger').html(data['maps'])#}
+        {##}
+        {#{);#}
+
+    })
+</script>
 </body>
 </html>

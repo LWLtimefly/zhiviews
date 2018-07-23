@@ -1,3 +1,4 @@
+import logging
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -12,7 +13,6 @@ def login(request):
     # 登录接口
     if request.method == 'GET':
         # 判断目前是否已经有用户
-        # print('%%%%%%%%%%%%%%%%%',request.COOKIES.get('login_user'))
         if request.COOKIES.get('login_user'):
             request.session['login_user']=request.COOKIES.get('login_user')
             return redirect('/home/')
@@ -36,6 +36,8 @@ def login(request):
         # 生成token，并保存到session中
         tok = token()
         request.session['login_user'] = tok
+        # 打印日志
+        logging.getLogger('mdjango').info('{} 登录成功'.format(username))
 
         # 把token存入到用户表中
         user.token = tok
@@ -77,6 +79,10 @@ def regist(request):
     if form.is_valid():
         # 保存数据到数据库
         form.save()
+
+        # 打印日志
+        logging.getLogger('mdjango').info('{} 注册成功'.format(username))
+
         # 判断是否含有自助登录
         if request.POST.get('cbx_keepState') == '1':
             # 生成token，并保存到cookie和session中
@@ -112,12 +118,13 @@ def logout(request):
             resp = redirect('/home/')
             # 退出时，从客户端中删除token,服务端删除token
             resp.delete_cookie('login_user')
-            # print('已删除')
-            # print('----@@@@@@@',request.COOKIES.get('login_user'))
             request.session.clear()
             user = User.objects.get(token=tok)
             user.token = ''
             user.save()
+
+            # 打印日志
+            logging.getLogger('mdjango').info('{} 退出成功'.format(user.username))
 
             return resp
         except:

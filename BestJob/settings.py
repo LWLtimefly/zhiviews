@@ -219,7 +219,7 @@ LOGGING = {
             'level':'INFO',
             'formatter':'info',
             'class':'logging.handlers.TimedRotatingFileHandler',
-            'filename':'a.log',
+            'filename':'log/a.log',
         }
     },
     # 日志对象， 处理器Handler,

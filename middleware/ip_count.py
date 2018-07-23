@@ -1,3 +1,4 @@
+import logging
 import time
 from django.http import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
@@ -41,3 +42,4 @@ class IpCountMiddleware(MiddlewareMixin):
     @staticmethod
     def add_black(user_ip):
         BLACK_MEMBER[user_ip] = time.time()
+        logging.getLogger('mdjango').warning('{} 加入黑名单：{}'.format(user_ip, BLACK_MEMBER))
